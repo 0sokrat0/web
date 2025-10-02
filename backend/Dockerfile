@@ -1,7 +1,8 @@
 # Build stage
 FROM golang:1.24.4-alpine AS builder
 
-RUN apk add --no-cache gcc musl-dev sqlite-dev
+# Install build dependencies
+RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app
 
@@ -14,8 +15,8 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Build the application with CGO enabled
-RUN CGO_ENABLED=1 GOOS=linux go build -o main ./cmd/server
+# Build the application without CGO (using pure Go SQLite)
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 
 FROM alpine:3.20
 
