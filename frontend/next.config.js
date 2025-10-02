@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   async rewrites() {
     // В продакшене API будет работать через Vercel Functions или внешний сервер
     if (process.env.NODE_ENV === 'development') {
