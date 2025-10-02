@@ -19,7 +19,7 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o main ./cmd/server
 
 FROM alpine:3.20
 
-RUN apk add --no-cache sqlite ca-certificates tzdata
+RUN apk add --no-cache sqlite  tzdata
 
 WORKDIR /app
 
