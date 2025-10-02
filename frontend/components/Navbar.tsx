@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,16 +13,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Users, User, LogOut, Settings, Plus, Info, MessageCircle, Sparkles } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Users, User, LogOut, Settings, Plus, Info, MessageCircle, Sparkles, Menu, X } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navigationItems = [
+    { href: '/projects', label: 'Проекты', icon: Users },
+    { href: '/about', label: 'О нас', icon: Info },
+    { href: '/contact', label: 'Контакты', icon: MessageCircle },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          {/* Logo */}
           <div className="flex items-center">
             <Link 
               href="/" 
@@ -36,27 +46,16 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Link href="/projects">
-              <Button variant="ghost" className="flex items-center space-x-2">
-                <Users className="w-4 h-4" />
-                <span>Проекты</span>
-              </Button>
-            </Link>
-            
-            <Link href="/about">
-              <Button variant="ghost" className="flex items-center space-x-2">
-                <Info className="w-4 h-4" />
-                <span>О нас</span>
-              </Button>
-            </Link>
-            
-            <Link href="/contact">
-              <Button variant="ghost" className="flex items-center space-x-2">
-                <MessageCircle className="w-4 h-4" />
-                <span>Контакты</span>
-              </Button>
-            </Link>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-2">
+            {navigationItems.map((item) => (
+              <Link key={item.href} href={item.href}>
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <item.icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </Button>
+              </Link>
+            ))}
             
             <ThemeToggle />
 
@@ -127,6 +126,111 @@ export default function Navbar() {
                 </Link>
               </>
             )}
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeToggle />
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Открыть меню</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <div className="flex flex-col space-y-4 mt-6">
+                  {/* Navigation Links */}
+                  {navigationItems.map((item) => (
+                    <Link 
+                      key={item.href} 
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors"
+                    >
+                      <item.icon className="w-5 h-5" />
+                      <span className="text-sm font-medium">{item.label}</span>
+                    </Link>
+                  ))}
+
+                  <div className="border-t pt-4">
+                    {user ? (
+                      <>
+                        <Link 
+                          href="/projects/create"
+                          onClick={() => setIsOpen(false)}
+                          className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors mb-2"
+                        >
+                          <Plus className="w-5 h-5" />
+                          <span className="text-sm font-medium">Создать проект</span>
+                        </Link>
+                        
+                        <div className="px-3 py-2">
+                          <div className="flex items-center space-x-3 mb-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={user.avatar} alt={user.name} />
+                              <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-xs">
+                                {user.name.charAt(0).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="text-sm font-medium">{user.name}</p>
+                              <p className="text-xs text-muted-foreground">{user.email}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-1">
+                            <Link 
+                              href={`/profile/${user.id}`}
+                              onClick={() => setIsOpen(false)}
+                              className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors"
+                            >
+                              <User className="w-4 h-4" />
+                              <span className="text-sm">Профиль</span>
+                            </Link>
+                            <Link 
+                              href="/settings"
+                              onClick={() => setIsOpen(false)}
+                              className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors"
+                            >
+                              <Settings className="w-4 h-4" />
+                              <span className="text-sm">Настройки</span>
+                            </Link>
+                            <button
+                              onClick={() => {
+                                logout();
+                                setIsOpen(false);
+                              }}
+                              className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors w-full text-left text-destructive"
+                            >
+                              <LogOut className="w-4 h-4" />
+                              <span className="text-sm">Выйти</span>
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="space-y-2">
+                        <Link 
+                          href="/login"
+                          onClick={() => setIsOpen(false)}
+                          className="flex items-center justify-center px-4 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                        >
+                          <span className="text-sm font-medium">Войти</span>
+                        </Link>
+                        <Link 
+                          href="/register"
+                          onClick={() => setIsOpen(false)}
+                          className="flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                        >
+                          <span className="text-sm font-medium">Регистрация</span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
