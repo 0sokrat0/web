@@ -1,49 +1,39 @@
 # Build stage
-FROM golang:1.24.4 AS builder
+FROM golang:1.24.4-alpine AS builder
 
-# Устанавливаем зависимости для сборки с CGO и SQLite
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    libc-dev \
-    libsqlite3-dev \
- && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache gcc musl-dev sqlite-dev
 
 WORKDIR /app
 
-# Копируем go.mod и go.sum
+# Copy go mod files
 COPY go.mod go.sum ./
+
+# Download dependencies
 RUN go mod download
 
-# Копируем исходники
+# Copy source code
 COPY . .
 
-# Собираем бинарь
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
+# Build the application with CGO enabled
+RUN CGO_ENABLED=1 GOOS=linux go build -o main ./cmd/server
 
-# Final stage
-FROM ubuntu:22.04
+FROM alpine:3.20
 
-# Устанавливаем рантайм-зависимости
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    tzdata \
-    sqlite3 \
-    libsqlite3-0 \
- && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache sqlite ca-certificates tzdata
 
 WORKDIR /app
 
-# Копируем бинарь
+# Copy the binary from builder stage
 COPY --from=builder /app/main .
 
-# Копируем базу (если есть)
+# Copy database file if exists
 COPY --from=builder /app/data.db* ./
 
-EXPOSE 8080
-
-# Переменные окружения
+# Set environment variables
 ENV PORT=8080
 ENV DB_PATH=./data.db
 ENV SECRET_KEY=your-super-secret-jwt-key-change-this-in-production
+
+EXPOSE 8080
 
 CMD ["./main"]
