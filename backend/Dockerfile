@@ -19,10 +19,10 @@ COPY . .
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 
 # Final stage
-FROM alpine:3.21
+FROM alpine:3.20
 
 # Install runtime dependencies
-RUN apk --no-cache add ca-certificates tzdata sqlite
+RUN apk update && apk --no-cache add ca-certificates tzdata sqlite
 
 # Set working directory
 WORKDIR /app
