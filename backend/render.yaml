@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: projlink-backend
+    env: go
+    buildCommand: go build -o main ./cmd/server
+    startCommand: ./main
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DB_PATH
+        value: ./data.db
+      - key: SECRET_KEY
+        generateValue: true
+    healthCheckPath: /api/health
