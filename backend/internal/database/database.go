@@ -12,7 +12,7 @@ var DB *gorm.DB
 
 func InitDatabase(dbPath string) {
 	var err error
-	
+
 	// Use GORM with SQLite driver (will use pure Go driver when CGO_ENABLED=0)
 	DB, err = gorm.Open(sqlite.Open(dbPath+"?_pragma=foreign_keys(1)"), &gorm.Config{})
 	if err != nil {
