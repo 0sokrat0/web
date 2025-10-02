@@ -1,47 +1,25 @@
-# Build stage
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
+
 COPY package*.json ./
-COPY yarn.lock ./
+RUN npm install --frozen-lockfile
 
-# Install dependencies
-RUN yarn install --frozen-lockfile
-
-# Copy source code
 COPY . .
+RUN npm run build
 
-# Build the application
-RUN yarn build
+FROM node:22-alpine AS runner
 
-# Production stage
-FROM node:18-alpine AS runner
-
-# Set working directory
 WORKDIR /app
 
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+COPY package*.json ./
+RUN npm install --omit=dev --frozen-lockfile
 
-# Copy built application
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Switch to non-root user
-USER nextjs
 
-# Expose port
+
 EXPOSE 3000
-
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-# Start the application
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
