@@ -1,3 +1,4 @@
+
 services:
   backend:
     build: 
@@ -11,6 +12,8 @@ services:
       - PORT=8080
       - DB_PATH=./data.db
       - SECRET_KEY=${SECRET_KEY:-your-super-secret-jwt-key-change-this-in-production}
+    volumes:
+      - backend_data:/root/data.db
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
@@ -41,3 +44,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+volumes:
+  backend_data:
+    driver: local
