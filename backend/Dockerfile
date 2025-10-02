@@ -18,11 +18,9 @@ COPY . .
 RUN CGO_ENABLED=1 GOOS=linux go build -o main ./cmd/server
 
 FROM alpine:3.20
-RUN echo "https://mirror.yandex.ru/mirrors/alpine/v3.20/main" > /etc/apk/repositories && \
-    echo "https://mirror.yandex.ru/mirrors/alpine/v3.20/community" >> /etc/apk/repositories
 
-# Теперь установка пакетов должна пройти успешно
-RUN apk add --no-cache sqlite tzdata
+# Устанавливаем только критически важные пакеты
+RUN apk add --no-cache ca-certificates
 
 WORKDIR /app
 
