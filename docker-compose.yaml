@@ -5,8 +5,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: project-exchange-backend
-    ports:
-      - "8080:8080"
     environment:
       - PORT=8080
       - DB_PATH=./data.db
@@ -20,6 +18,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`0sokrat0.ru`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+      - "traefik.docker.network=dokploy-network"
+      - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
+      - "traefik.http.routers.backend.middlewares=backend-stripprefix"
     networks:
       - dokploy-network
 
@@ -28,12 +35,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: project-exchange-frontend
-    ports:
-      - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - BACKEND_URL=http://backend:8080
+      - BACKEND_URL=https://0sokrat0.ru/api
     depends_on:
       backend:
         condition: service_healthy
@@ -44,6 +49,20 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`0sokrat0.ru`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      - "traefik.docker.network=dokploy-network"
+      - "traefik.http.routers.frontend-redirect.rule=Host(`www.0sokrat0.ru`)"
+      - "traefik.http.routers.frontend-redirect.entrypoints=websecure"
+      - "traefik.http.routers.frontend-redirect.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend-redirect.middlewares=redirect-to-non-www"
+      - "traefik.http.middlewares.redirect-to-non-www.redirectregex.regex=^https://www\\.(.+)"
+      - "traefik.http.middlewares.redirect-to-non-www.redirectregex.replacement=https://$${1}"
+      - "traefik.http.middlewares.redirect-to-non-www.redirectregex.permanent=true"
     networks:
       - dokploy-network
 
