@@ -29,19 +29,20 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
             <Link 
               href="/" 
-              className="flex items-center space-x-2 group"
+              className="flex items-center space-x-1 sm:space-x-2 group"
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <Sparkles className="w-5 h-5 text-primary-foreground" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
-                Proj•Link
+              <span className="text-lg sm:text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                <span className="hidden sm:inline">Proj•Link</span>
+                <span className="sm:hidden">P•L</span>
               </span>
             </Link>
           </div>
@@ -129,104 +130,120 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Navigation */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div className="md:hidden flex items-center space-x-1">
             <ThemeToggle />
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="p-2">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Открыть меню</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <div className="flex flex-col space-y-4 mt-6">
-                  {/* Navigation Links */}
-                  {navigationItems.map((item) => (
-                    <Link 
-                      key={item.href} 
-                      href={item.href}
+              <SheetContent side="right" className="w-[280px] sm:w-[320px] p-0">
+                <div className="flex flex-col h-full">
+                  {/* Header */}
+                  <div className="flex items-center justify-between p-4 border-b">
+                    <h2 className="text-lg font-semibold">Меню</h2>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors"
+                      className="p-1"
                     >
-                      <item.icon className="w-5 h-5" />
-                      <span className="text-sm font-medium">{item.label}</span>
-                    </Link>
-                  ))}
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  {/* Navigation Links */}
+                  <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                    {navigationItems.map((item) => (
+                      <Link 
+                        key={item.href} 
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-3 px-3 py-3 rounded-md hover:bg-accent transition-colors"
+                      >
+                        <item.icon className="w-5 h-5" />
+                        <span className="text-sm font-medium">{item.label}</span>
+                      </Link>
+                    ))}
 
-                  <div className="border-t pt-4">
-                    {user ? (
-                      <>
-                        <Link 
-                          href="/projects/create"
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors mb-2"
-                        >
-                          <Plus className="w-5 h-5" />
-                          <span className="text-sm font-medium">Создать проект</span>
-                        </Link>
-                        
-                        <div className="px-3 py-2">
-                          <div className="flex items-center space-x-3 mb-3">
-                            <Avatar className="h-8 w-8">
-                              <AvatarImage src={user.avatar} alt={user.name} />
-                              <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-xs">
-                                {user.name.charAt(0).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="text-sm font-medium">{user.name}</p>
-                              <p className="text-xs text-muted-foreground">{user.email}</p>
+                    {/* User Section */}
+                    <div className="border-t pt-4">
+                      {user ? (
+                        <>
+                          <Link 
+                            href="/projects/create"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center space-x-3 px-3 py-3 rounded-md hover:bg-accent transition-colors mb-3"
+                          >
+                            <Plus className="w-5 h-5" />
+                            <span className="text-sm font-medium">Создать проект</span>
+                          </Link>
+                          
+                          <div className="px-3 py-2">
+                            <div className="flex items-center space-x-3 mb-3">
+                              <Avatar className="h-8 w-8">
+                                <AvatarImage src={user.avatar} alt={user.name} />
+                                <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-xs">
+                                  {user.name.charAt(0).toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium truncate">{user.name}</p>
+                                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-1">
+                              <Link 
+                                href={`/profile/${user.id}`}
+                                onClick={() => setIsOpen(false)}
+                                className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors"
+                              >
+                                <User className="w-4 h-4" />
+                                <span className="text-sm">Профиль</span>
+                              </Link>
+                              <Link 
+                                href="/settings"
+                                onClick={() => setIsOpen(false)}
+                                className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors"
+                              >
+                                <Settings className="w-4 h-4" />
+                                <span className="text-sm">Настройки</span>
+                              </Link>
+                              <button
+                                onClick={() => {
+                                  logout();
+                                  setIsOpen(false);
+                                }}
+                                className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors w-full text-left text-destructive"
+                              >
+                                <LogOut className="w-4 h-4" />
+                                <span className="text-sm">Выйти</span>
+                              </button>
                             </div>
                           </div>
-                          
-                          <div className="space-y-1">
-                            <Link 
-                              href={`/profile/${user.id}`}
-                              onClick={() => setIsOpen(false)}
-                              className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors"
-                            >
-                              <User className="w-4 h-4" />
-                              <span className="text-sm">Профиль</span>
-                            </Link>
-                            <Link 
-                              href="/settings"
-                              onClick={() => setIsOpen(false)}
-                              className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors"
-                            >
-                              <Settings className="w-4 h-4" />
-                              <span className="text-sm">Настройки</span>
-                            </Link>
-                            <button
-                              onClick={() => {
-                                logout();
-                                setIsOpen(false);
-                              }}
-                              className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent transition-colors w-full text-left text-destructive"
-                            >
-                              <LogOut className="w-4 h-4" />
-                              <span className="text-sm">Выйти</span>
-                            </button>
-                          </div>
+                        </>
+                      ) : (
+                        <div className="space-y-2">
+                          <Link 
+                            href="/login"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center justify-center px-4 py-3 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                          >
+                            <span className="text-sm font-medium">Войти</span>
+                          </Link>
+                          <Link 
+                            href="/register"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center justify-center px-4 py-3 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                          >
+                            <span className="text-sm font-medium">Регистрация</span>
+                          </Link>
                         </div>
-                      </>
-                    ) : (
-                      <div className="space-y-2">
-                        <Link 
-                          href="/login"
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center justify-center px-4 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
-                        >
-                          <span className="text-sm font-medium">Войти</span>
-                        </Link>
-                        <Link 
-                          href="/register"
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                        >
-                          <span className="text-sm font-medium">Регистрация</span>
-                        </Link>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               </SheetContent>
