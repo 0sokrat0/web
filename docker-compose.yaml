@@ -4,6 +4,7 @@ services:
     build: 
       context: ./backend
       dockerfile: Dockerfile
+      network: host
     expose:
       - 8080
     container_name: project-exchange-backend
@@ -36,6 +37,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      network: host
     container_name: project-exchange-frontend
     ports:
       - "3000:3000"
