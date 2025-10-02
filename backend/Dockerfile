@@ -21,7 +21,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 FROM alpine:3.20
 
 # Устанавливаем только критически важные пакеты
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates sqlite
 
 WORKDIR /app
 

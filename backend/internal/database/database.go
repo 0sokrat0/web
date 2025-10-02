@@ -13,7 +13,7 @@ var DB *gorm.DB
 func InitDatabase(dbPath string) {
 	var err error
 
-	// Use pure Go SQLite driver
+	// Use GORM w≈ith SQLite driver
 	DB, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
