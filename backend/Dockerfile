@@ -4,8 +4,8 @@ FROM golang:1.21-alpine3.18 AS builder
 # Set working directory
 WORKDIR /app
 
-# Install dependencies
-RUN apk add --no-cache git
+# Install dependencies including build tools for CGO
+RUN apk add --no-cache git gcc musl-dev
 
 # Copy go mod files
 COPY go.mod go.sum ./
