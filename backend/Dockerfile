@@ -1,45 +1,45 @@
 # Build stage
 FROM golang:1.24.4-alpine AS builder
 
-# Install build dependencies for CGO
+# Устанавливаем зависимости для сборки с CGO
 RUN apk add --no-cache gcc musl-dev sqlite-dev
 
 WORKDIR /app
 
-# Copy go mod files
+# Копируем go.mod и go.sum
 COPY go.mod go.sum ./
 
-# Download dependencies
+# Скачиваем зависимости
 RUN go mod download
 
-# Copy source code
+# Копируем исходники
 COPY . .
 
-# Build the application with CGO enabled
+# Собираем бинарник с включенным CGO
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 
 # Final stage
 FROM alpine:3.20
 
-# Install runtime dependencies
-RUN apk update && apk --no-cache add ca-certificates tzdata sqlite
+# Устанавливаем рантайм-зависимости
+RUN apk update && apk add --no-cache ca-certificates tzdata sqlite sqlite-libs && rm -rf /var/cache/apk/*
 
-# Set working directory
+# Рабочая директория
 WORKDIR /app
 
-# Copy the binary from builder stage
+# Копируем бинарник из builder-стейджа
 COPY --from=builder /app/main .
 
-# Copy database file if exists
+# Копируем БД (если есть)
 COPY --from=builder /app/data.db* ./
 
-# Expose port
+# Пробрасываем порт
 EXPOSE 8080
 
-# Set environment variables
+# Переменные окружения
 ENV PORT=8080
 ENV DB_PATH=./data.db
 ENV SECRET_KEY=your-super-secret-jwt-key-change-this-in-production
 
-# Run the application
+# Запуск приложения
 CMD ["./main"]
