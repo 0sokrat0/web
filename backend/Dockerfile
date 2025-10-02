@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.21-alpine3.18 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -20,10 +20,10 @@ COPY . .
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 
 # Final stage
-FROM alpine:latest
+FROM alpine:3.18
 
-# Install ca-certificates for HTTPS requests
-RUN apk --no-cache add ca-certificates sqlite
+# Install ca-certificates for HTTPS requests and sqlite
+RUN apk --no-cache add ca-certificates sqlite-dev
 
 # Create app directory
 WORKDIR /root/
