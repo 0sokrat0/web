@@ -12,8 +12,6 @@ services:
       - PORT=8080
       - DB_PATH=./data.db
       - SECRET_KEY=${SECRET_KEY:-your-super-secret-jwt-key-change-this-in-production}
-    volumes:
-      - backend_data:/root/data.db
     restart: unless-stopped
     networks:
       - dokploy-network
