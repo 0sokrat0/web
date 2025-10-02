@@ -1,11 +1,10 @@
 # Build stage
-FROM golang:1.21-bullseye AS builder
+FROM golang:1.24.4-alpine AS builder
 
-# Set working directory
+# Install build dependencies for CGO
+RUN apk add --no-cache gcc musl-dev sqlite-dev
+
 WORKDIR /app
-
-# Install dependencies including build tools for CGO
-RUN apt-get update && apt-get install -y git gcc libc6-dev sqlite3
 
 # Copy go mod files
 COPY go.mod go.sum ./
@@ -16,17 +15,17 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application with CGO enabled
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 
 # Final stage
-FROM debian:bullseye-slim
+FROM alpine:3.21
 
-# Install ca-certificates and sqlite
-RUN apt-get update && apt-get install -y ca-certificates sqlite3 && rm -rf /var/lib/apt/lists/*
+# Install runtime dependencies
+RUN apk --no-cache add ca-certificates tzdata sqlite
 
-# Create app directory
-WORKDIR /root/
+# Set working directory
+WORKDIR /app
 
 # Copy the binary from builder stage
 COPY --from=builder /app/main .
