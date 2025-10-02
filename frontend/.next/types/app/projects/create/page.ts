@@ -1,4 +1,4 @@
-// File: /Users/sokrat/Downloads/Cursor/frontend/app/projects/create/page.tsx
+// File: /Users/sokrat/Downloads/МГУУПМ/frontend/app/projects/create/page.tsx
 import * as entry from '../../../../../app/projects/create/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

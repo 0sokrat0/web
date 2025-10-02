@@ -1,4 +1,4 @@
-// File: /Users/sokrat/Downloads/Cursor/frontend/app/profile/edit/page.tsx
+// File: /Users/sokrat/Downloads/МГУУПМ/frontend/app/profile/edit/page.tsx
 import * as entry from '../../../../../app/profile/edit/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

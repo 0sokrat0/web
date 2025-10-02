@@ -7,9 +7,9 @@
 7:HL["/_next/static/media/e4af272ccee01ff0-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 8:HL["/_next/static/media/eafabf029ad39a43-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 9:HL["/_next/static/css/80c32c025c6f8a67.css","style",{"crossOrigin":""}]
-0:["ReiWlu76OTq-UOVQ6cxk3",[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],"$La",[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/80c32c025c6f8a67.css","precedence":"next","crossOrigin":""}]],"$Lb"]]]]
-c:I[5093,["660","static/chunks/660-fff5586c8a73bfaf.js","326","static/chunks/326-801622ab264075fe.js","128","static/chunks/128-df033f65d71631d0.js","599","static/chunks/599-5d2b054437e1d856.js","185","static/chunks/app/layout-bde224e36c520631.js"],"AuthProvider"]
-d:I[2154,["660","static/chunks/660-fff5586c8a73bfaf.js","326","static/chunks/326-801622ab264075fe.js","128","static/chunks/128-df033f65d71631d0.js","599","static/chunks/599-5d2b054437e1d856.js","185","static/chunks/app/layout-bde224e36c520631.js"],""]
+0:["LL8VRYjtFS4rWrK_tg6IW",[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],"$La",[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/80c32c025c6f8a67.css","precedence":"next","crossOrigin":""}]],"$Lb"]]]]
+c:I[5093,["660","static/chunks/660-fff5586c8a73bfaf.js","326","static/chunks/326-801622ab264075fe.js","128","static/chunks/128-df033f65d71631d0.js","599","static/chunks/599-5d2b054437e1d856.js","185","static/chunks/app/layout-06ea6d90d096402d.js"],"AuthProvider"]
+d:I[2154,["660","static/chunks/660-fff5586c8a73bfaf.js","326","static/chunks/326-801622ab264075fe.js","128","static/chunks/128-df033f65d71631d0.js","599","static/chunks/599-5d2b054437e1d856.js","185","static/chunks/app/layout-06ea6d90d096402d.js"],""]
 e:I[6954,[],""]
 f:I[7264,[],""]
 11:{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"}

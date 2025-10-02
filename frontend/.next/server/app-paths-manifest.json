@@ -4,11 +4,11 @@
   "/contact/page": "app/contact/page.js",
   "/login/page": "app/login/page.js",
   "/profile/[id]/page": "app/profile/[id]/page.js",
-  "/page": "app/page.js",
   "/profile/edit/page": "app/profile/edit/page.js",
   "/projects/[id]/apply/page": "app/projects/[id]/apply/page.js",
+  "/page": "app/page.js",
   "/projects/[id]/page": "app/projects/[id]/page.js",
+  "/projects/create/page": "app/projects/create/page.js",
   "/register/page": "app/register/page.js",
-  "/projects/page": "app/projects/page.js",
-  "/projects/create/page": "app/projects/create/page.js"
+  "/projects/page": "app/projects/page.js"
 }
