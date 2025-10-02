@@ -15,12 +15,9 @@ services:
     volumes:
       - backend_data:/root/data.db
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    networks:
+      - dokploy-network
+    
 
   frontend:
     build:
@@ -28,8 +25,8 @@ services:
       dockerfile: Dockerfile
       network: host
     container_name: project-exchange-frontend
-    ports:
-      - "3001:3000"
+    expose:
+      - 3000
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -38,13 +35,20 @@ services:
       backend:
         condition: service_healthy
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.project-exchange-frontend-http.rule=Host(`0sokrat0.ru`)"
+      - "traefik.http.routers.project-exchange-frontend-http.entrypoints=web"
+      - "traefik.http.routers.project-exchange-frontend-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.project-exchange-frontend.rule=Host(`0sokrat0.ru`)"
+      - "traefik.http.routers.project-exchange-frontend.entrypoints=websecure"
+      - "traefik.http.routers.project-exchange-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.project-exchange-frontend.loadbalancer.server.port=3000"
 
-volumes:
-  backend_data:
-    driver: local
+
+networks:
+  dokploy-network:
+    external: true
